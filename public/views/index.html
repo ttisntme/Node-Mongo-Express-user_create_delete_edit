@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Mean shell</title>
+	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body>
+	<div>
+		<form>
+		  	Enter text and hit enter:
+		  	<input type="text" id="mess" name="mes" />
+		  	<input type="submit" id="buttonClick" value="Submit" />
+			
+		</form>
+		<h1>Data is displayed below</h1>
+		<h4 id="text"></h4>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			populateText();
+                $('#buttonClick').click(function(e){
+                    e.preventDefault();
+                    console.log('Submit button is clicked');
+                    var	mes = document.getElementById("mess").value;
+;		
+					var data = {};
+					data.message = mes;
+					console.log(data.message);
+				
+					$.ajax({
+						type: 'POST',
+						data: JSON.stringify(data),
+				        contentType: 'application/json',
+                        url: 'http://localhost:3000/api/insert',						
+                        success: function(result) {
+                            console.log('success');
+                        }
+                        
+                    });
+                   // getLastElement();
+                   $.get('http://localhost:3000/api/show', function(data, status){
+						//console.log("data is hereee  " + data[data.length - 1].message);
+			        	$("h4").append(data[data.length - 1].message + "<br/>");
+			        });
+                });	
+			});
+		
+		function populateText() {
+			$.get('http://localhost:3000/api/show', function(data, status){
+				$.each(data, function(i, item) {
+					console.log(data[i].message);
+					$("h4").append(data[i].message + "<br/>");
+				})
+			});
+	}
+	</script>
+</body>
+</html>
